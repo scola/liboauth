@@ -3,7 +3,7 @@
  *  @file oauth.h
  *  @author Robin Gareus <robin@gareus.org>
  *
- * Copyright 2007-2012 Robin Gareus <robin@gareus.org>
+ * Copyright 2007-2014 Robin Gareus <robin@gareus.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,15 +29,15 @@
 
 #ifndef DOXYGEN_IGNORE
 // liboauth version
-#define LIBOAUTH_VERSION "1.0.1"
+#define LIBOAUTH_VERSION "1.0.2"
 #define LIBOAUTH_VERSION_MAJOR  1
 #define LIBOAUTH_VERSION_MINOR  0
-#define LIBOAUTH_VERSION_MICRO  1
+#define LIBOAUTH_VERSION_MICRO  2
 
 //interface revision number
 //http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 #define LIBOAUTH_CUR  8
-#define LIBOAUTH_REV  5
+#define LIBOAUTH_REV  6
 #define LIBOAUTH_AGE  8
 
 #ifdef __GNUC__
@@ -126,7 +126,7 @@ char *oauth_url_unescape(const char *string, size_t *olen);
 char *oauth_sign_hmac_sha1 (const char *m, const char *k);
 
 /**
- * same as \ref oauth_sign_hmac_sha1 but allows
+ * same as \ref oauth_sign_hmac_sha1 but allows one
  * to specify length of message and key (in case they contain null chars).
  *
  * @param m message to be signed
@@ -180,7 +180,7 @@ int oauth_verify_rsa_sha1 (const char *m, const char *c, const char *s);
  * @param len the number of arguments to follow this parameter
  *
  * @return pointer to memory holding the concatenated 
- * strings - needs to be free(d) by the caller. or NULL
+ * strings - needs to be xfree(d) by the caller. or NULL
  * in case we ran out of memory.
  */
 char *oauth_catenc(int len, ...);
@@ -296,7 +296,7 @@ void oauth_add_param_to_array(int *argcp, char ***argvp, const char *addparam);
  * free array args
  *
  * @param argcp pointer to array length int
- * @param argvp pointer to array values to be free()d
+ * @param argvp pointer to array values to be xfree()d
  */
 void oauth_free_array(int *argcp, char ***argvp);
 
@@ -395,7 +395,7 @@ char *oauth_sign_url (const char *url, char **postargs,
  * The user needs to call /ref oauth_serialize_url (oA)
  * and /ref oauth_free_array to do so.
  *
- * This allows to split parts of the URL to be used for
+ * This allows one to split parts of the URL to be used for
  * OAuth HTTP Authorization header:
  * see http://oauth.net/core/1.0a/#consumer_req_param
  * the oauthtest2 example code does so.
@@ -577,9 +577,8 @@ char *oauth_http_get (const char *u, const char *q) attribute_deprecated;
  *
  * (requires libcurl)
  *
- * This is equivalent to /ref oauth_http_get but allows to
- * specifiy a custom HTTP header and has
- * has no support for commandline-curl.
+ * This is equivalent to /ref oauth_http_get but allows one
+ * to specifiy a custom HTTP header andhas no support for commandline-curl.
  *
  * If liboauth is compiled <b>without</b> libcurl this function
  * always returns NULL.
